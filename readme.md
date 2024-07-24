@@ -9,7 +9,7 @@ This is an online Snake game built using Django for the backend and HTML, CSS, a
 - "Play Again" functionality
 
 ## Installation
-
+   
 1. Clone the repository:
 
     ```bash

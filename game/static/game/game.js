@@ -2,17 +2,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     const countdownElement = document.getElementById("countdown");
-    const scoreForm = document.getElementById("scoreForm");
-    const saveScoreUrl = scoreForm.getAttribute("data-save-url");
-    const highScoresUrl = scoreForm.getAttribute("data-high-scores-url");
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    let snake, dx, dy, food, gameInterval, countdownTimeout;
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    let snake, dx, dy, food, gameInterval, countdownTimeout, score;
 
     function initGame() {
         snake = [{ x: 300, y: 300 }];
         dx = 20;
         dy = 0;
         food = generateFood();
+        score = 0; // Initialize score
+        updateScore(); // Display initial score
         document.getElementById("scoreForm").style.display = "none";
         document.getElementById("playAgain").style.display = "none";
         countdownElement.style.display = "block";
@@ -50,12 +49,14 @@ document.addEventListener("DOMContentLoaded", function() {
         snake.unshift(head);
         if (head.x === food.x && head.y === food.y) {
             food = generateFood();
+            score++; // Increment score
+            updateScore(); // Update score display
         } else {
             snake.pop();
         }
         if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height || snake.slice(1).some(part => part.x === head.x && part.y === head.y)) {
             clearInterval(gameInterval);
-            document.getElementById("scoreInput").value = snake.length;
+            document.getElementById("scoreInput").value = score; // Update hidden score input with final score
             document.getElementById("scoreForm").style.display = "block";
             document.getElementById("playAgain").style.display = "block";
         }
@@ -63,6 +64,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function generateFood() {
         return { x: Math.floor(Math.random() * 30) * 20, y: Math.floor(Math.random() * 30) * 20 };
+    }
+
+    function updateScore() {
+        scoreDisplay.textContent = "Score: " + score;
     }
 
     function gameLoop() {
@@ -88,16 +93,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById("scoreForm").addEventListener("submit", function(event) {
         event.preventDefault();
-        fetch(saveScoreUrl, {
+        fetch("{% url 'save_score' %}", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-CSRFToken": csrfToken
+                "X-CSRFToken": "{{ csrf_token }}"
             },
             body: new URLSearchParams(new FormData(this))
         }).then(response => response.json()).then(data => {
             if (data.status === "ok") {
-                window.location.href = highScoresUrl;
+                window.location.href = "{% url 'high_scores' %}";
             } else {
                 alert("Failed to save score");
             }

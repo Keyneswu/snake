@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#*!(j2dq5thz=8!6r$ptxe#1f-zo9o@t3=du&8!198u-(+rt1$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS=[""]
+ALLOWED_HOSTS=["0.0.0.0", "127.0.0.1","localhost"]
 
 # Application definition
 
@@ -69,7 +69,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'snake.wsgi.application'
-CSRF_TRUSTED_ORIGINS=[""]
+CSRF_TRUSTED_ORIGINS=["https://www.keyneswu.top"]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

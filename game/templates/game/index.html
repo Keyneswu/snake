@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{%load static%}
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,7 @@
         <h1>Online Snake Game</h1>
         <canvas id="gameCanvas" width="600" height="600"></canvas>
         <div id="countdown" style="display: none; font-size: 24px; font-weight: bold;"></div>
+        <div id="scoreDisplay">Score: 0</div> <!-- Added score display -->
         <form id="scoreForm" data-save-url="{% url 'save_score' %}" data-high-scores-url="{% url 'high_scores' %}" style="display: none;">
             {% csrf_token %}
             <input type="text" name="username" placeholder="Enter your username" required>
